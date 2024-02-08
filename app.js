@@ -7,7 +7,7 @@ import cors from "cors";
 import passport from "passport";
 import { Strategy as GoogleTokenStrategy } from "passport-google-token";
 import { Strategy as LocalStrategy } from "passport-local"; 
-import { googleStrategyHandler } from "./controllers/auth.js";
+import { googleStrategyHandler, localAuthStrategy } from "./controllers/auth.js";
 import session from "express-session";
 import { User } from "./models/user.js";
 
@@ -51,7 +51,7 @@ passport.use(new GoogleTokenStrategy({
 passport.use(new LocalStrategy({
     usernameField: 'email', // assuming your login form sends 'email' and 'password'
     passwordField: 'password'
-  }, ));
+  }, localAuthStrategy));
 
 //using routes
 app.use("/api/auth", authRouter);
