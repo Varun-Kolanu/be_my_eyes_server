@@ -14,6 +14,10 @@ const userSchema = new mongoose.Schema({
     googleId: {
         type: String
     },
+    role: {
+        type: String,
+        enum: ['blind', 'volunteer']
+    },
     createdAt: {
         type: Date,
         default: Date.now

@@ -1,6 +1,7 @@
 import express from "express";
 import { config } from "dotenv";
-import authRouter from "./routes/auth.js"
+import authRouter from "./routes/auth.js";
+import utilsRouter from "./routes/utils.js";
 import cookieParser from "cookie-parser";
 import { errorMiddleware } from "./middlewares/error.js";
 import cors from "cors";
@@ -10,6 +11,7 @@ import { Strategy as LocalStrategy } from "passport-local";
 import { googleStrategyHandler, localAuthStrategy } from "./controllers/auth.js";
 import session from "express-session";
 import { User } from "./models/user.js";
+import 'express-async-errors';
 
 export const app = express();
 config();
@@ -30,7 +32,8 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session())
 
-passport.serializeUser(function (user, done) {
+passport.serializeUser(async (userPromise, done) => {
+    const user = await userPromise;
     done(null, user._id);
 });
 
@@ -49,15 +52,20 @@ passport.use(new GoogleTokenStrategy({
 }, googleStrategyHandler));
 
 passport.use(new LocalStrategy({
-    usernameField: 'email', // assuming your login form sends 'email' and 'password'
+    usernameField: 'email',
     passwordField: 'password'
-  }, localAuthStrategy));
+}, localAuthStrategy));
 
 //using routes
 app.use("/api/auth", authRouter);
+app.use("/api/utils", utilsRouter);
 
 app.get('/', (req, res) => {
     res.send('Welcome to Be My Eyes Explo Server');
 });
 
 app.use(errorMiddleware);
+app.use((err, req, res, next) => {
+    console.error(err);
+    res.status(500).send('Internal Server Error');
+});

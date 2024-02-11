@@ -2,7 +2,7 @@ import { User } from "../models/user.js";
 import jwt from "jsonwebtoken";
 import ErrorHandler from "./error.js";
 
-const isAuthenticated = async (req, res, next) => {
+export const isAuthenticated = async (req, res, next) => {
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
         return next(new ErrorHandler("Please provide a valid Bearer token", 400));
@@ -13,11 +13,9 @@ const isAuthenticated = async (req, res, next) => {
     }
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.user = await User.findById(decoded);
+        req.user = await User.findById(decoded._id);
         next();
     } catch (error) {
         return next(new ErrorHandler("Invalid or expired token", 401));
     }
 }
-
-export default isAuthenticated;

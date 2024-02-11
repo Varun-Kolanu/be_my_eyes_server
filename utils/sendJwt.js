@@ -5,6 +5,7 @@ export const sendJwt = (user, res, statusCode = 200) => {
     res
         .status(statusCode)
         .json({
-            'jwt': value
+            'jwt': value,
+            'role': user.role ? user.role : 'new'
         })
 }
