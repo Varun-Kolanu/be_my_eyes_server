@@ -18,6 +18,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         enum: ['blind', 'volunteer']
     },
+    language: {
+        type: String,
+        enum: ['English', 'Hindi', 'Telugu', 'Marathi']
+    },
     createdAt: {
         type: Date,
         default: Date.now

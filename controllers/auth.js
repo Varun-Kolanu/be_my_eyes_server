@@ -54,3 +54,18 @@ export const updateProfile = async (req, res) => {
     }
     return res.status(200).json({ role: user.role });
 }
+
+export const mainScreenProfile = async (req, res) => {
+    const options = { year: 'numeric', month: 'short', day: '2-digit' };
+    const profile = {
+        name: req.user.name,
+        joinDate: req.user.createdAt.toLocaleDateString('en-US', options),
+        language: req.user.language
+    }
+    return res.status(200).json(profile);
+}
+
+export const deleteAccount = async (req, res) => {
+    await User.findOneAndDelete({_id: req.user._id});
+    return res.status(200).json({ message: 'Deleted Account successfully' });
+}
