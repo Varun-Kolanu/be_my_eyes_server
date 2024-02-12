@@ -20,7 +20,8 @@ const userSchema = new mongoose.Schema({
     },
     language: {
         type: String,
-        enum: ['English', 'Hindi', 'Telugu', 'Marathi']
+        enum: ['English', 'Hindi', 'Telugu', 'Marathi'],
+        default: 'English'
     },
     createdAt: {
         type: Date,
